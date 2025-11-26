@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { PageContainer } from "./components/layout/PageContainer";
 import { fetchHealth } from "./api/healthApi";
 import { fetchConfig } from "./api/configApi";
-import type { ConfigResponse } from "./types/schedule";
+import type {
+  ConfigResponse,
+  ScheduleRequestPayload
+} from "./types/schedule";
+import { PrescriptionForm } from "./components/form/PrescriptionForm";
 
 type LoadStatus = "idle" | "loading" | "ok" | "error";
 
@@ -13,6 +17,10 @@ function App() {
   const [configStatus, setConfigStatus] = useState<LoadStatus>("idle");
   const [config, setConfig] = useState<ConfigResponse | null>(null);
   const [configError, setConfigError] = useState<string>("");
+
+  const [lastPayload, setLastPayload] = useState<ScheduleRequestPayload | null>(
+    null
+  );
 
   useEffect(() => {
     const checkHealth = async () => {
@@ -69,6 +77,11 @@ function App() {
       {footerStatus}
     </span>
   );
+
+  const handleFormSubmit = (payload: ScheduleRequestPayload) => {
+    setLastPayload(payload);
+    // In Phase 6, we will call the schedule API from here.
+  };
 
   return (
     <PageContainer title="Prescription Scheduler" footer={footerNode}>
@@ -131,14 +144,22 @@ function App() {
               Prescription types: {config.prescriptionTypes.join(", ")}
             </p>
           )}
-
-          <p className="mt-4 text-sm text-slate-300">
-            next step = this page will show the prescription input form
-            and the generated 14-day schedule. For now, we&apos;re ensuring the
-            frontend can read configuration from the backend instead of
-            hardcoding it.
-          </p>
         </div>
+
+        {configStatus === "ok" && config && (
+          <PrescriptionForm config={config} onSubmit={handleFormSubmit} />
+        )}
+
+        {lastPayload && (
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
+            <div className="font-semibold text-slate-100 mb-2">
+              Last valid Stage 1 payload (debug)
+            </div>
+            <pre className="whitespace-pre-wrap break-words">
+              {JSON.stringify(lastPayload, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </PageContainer>
   );
