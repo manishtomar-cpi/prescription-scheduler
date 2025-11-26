@@ -1,7 +1,5 @@
 # Prescription Scheduler – Server
 
-Backend API for the Prescription Scheduler test application.
-
 - Node.js + Express
 - TypeScript
 - Jest + Supertest

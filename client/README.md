@@ -1,7 +1,5 @@
 # Prescription Scheduler – Client
 
-Frontend application for the Prescription Scheduler test.
-
 - React + TypeScript (Vite)
 - Tailwind CSS
 - Vitest + React Testing Library
