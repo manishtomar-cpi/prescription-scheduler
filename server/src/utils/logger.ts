@@ -1,26 +1,21 @@
-type LogLevel = "info" | "warn" | "error";
+const isTestEnv = process.env.NODE_ENV === "test";
 
-interface LogContext {
-  requestId?: string;
-  [key: string]: unknown;
-}
+type LogLevel = "info" | "error";
 
-const formatMessage = (level: LogLevel, message: string, context?: LogContext) => {
-  const timestamp = new Date().toISOString();
-  const base = `[${timestamp}] [${level.toUpperCase()}]`;
-  const requestPart = context?.requestId ? ` [reqId=${context.requestId}]` : "";
-  const contextPart = context ? ` ${JSON.stringify({ ...context, requestId: undefined })}` : "";
-  return `${base}${requestPart} ${message}${contextPart}`;
+const format = (level: LogLevel, message: string, meta?: unknown): string => {
+  const base = `[${new Date().toISOString()}] [${level.toUpperCase()}]`;
+  if (!meta) {
+    return `${base} ${message}`;
+  }
+  return `${base} ${message} ${JSON.stringify(meta)}`;
 };
 
 export const logger = {
-  info: (message: string, context?: LogContext) => {
-    console.log(formatMessage("info", message, context));
+  info(message: string, meta?: unknown): void {
+    if (isTestEnv) return; // keep tests quiet
+    console.log(format("info", message, meta));
   },
-  warn: (message: string, context?: LogContext) => {
-    console.warn(formatMessage("warn", message, context));
-  },
-  error: (message: string, context?: LogContext) => {
-    console.error(formatMessage("error", message, context));
+  error(message: string, meta?: unknown): void {
+    console.error(format("error", message, meta));
   }
 };
