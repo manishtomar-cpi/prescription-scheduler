@@ -123,7 +123,7 @@ export const PrescriptionForm = ({
       className="space-y-6 rounded-xl border border-slate-800 bg-slate-900/60 p-6"
     >
       <h2 className="text-lg font-semibold text-slate-100 mb-2">
-        Stage 1 – Prescription details
+        Prescription details
       </h2>
       <p className="text-xs text-slate-400 mb-4">
         Provide the user&apos;s availability and prescription details. The

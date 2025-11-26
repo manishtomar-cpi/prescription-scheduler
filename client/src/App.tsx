@@ -226,7 +226,7 @@ function App() {
         )}
 
         {/* Debug payload card (optional – can be removed before final submission) */}
-        {lastPayload && (
+        {/* {lastPayload && (
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
             <div className="font-semibold text-slate-100 mb-2">
               Last valid Stage 1 payload (debug)
@@ -235,7 +235,7 @@ function App() {
               {JSON.stringify(lastPayload, null, 2)}
             </pre>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Toast notifications */}

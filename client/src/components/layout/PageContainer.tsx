@@ -12,7 +12,7 @@ export const PageContainer = ({ title, children, footer }: PageContainerProps) =
       <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold text-sky-400">{title}</h1>
-          <span className="text-xs text-slate-400">Prescription Scheduler</span>
+          {/* <span className="text-xs text-slate-400">Prescription Scheduler</span> */}
         </div>
       </header>
 
@@ -22,7 +22,7 @@ export const PageContainer = ({ title, children, footer }: PageContainerProps) =
 
       <footer className="border-t border-slate-800 bg-slate-900/60">
         <div className="max-w-4xl mx-auto px-4 py-3 text-xs text-slate-500 flex justify-between">
-          <span>Demo app for developer test</span>
+          <span>Prescription Scheduler</span>
           {footer}
         </div>
       </footer>
