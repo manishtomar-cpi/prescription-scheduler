@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
+import { computeSchedule } from "../services/scheduleService";
 
 export const calculateScheduleController = (req: Request, res: Response) => {
-  // for now, we only return placeholder response
+  const schedule = computeSchedule(req.body);
+
   res.status(200).json({
-    message: "Schedule calculation endpoint (Stage 1)",
-    validatedInput: req.body,
+    schedule,
     requestId: req.requestId
   });
 };
