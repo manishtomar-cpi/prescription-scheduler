@@ -5,7 +5,7 @@ import { requestLogger } from "./middleware/requestLogger";
 import { healthRouter } from "./routes/healthRoutes";
 import { errorHandler } from "./middleware/errorHandler";
 import { scheduleRouter } from "./routes/scheduleRoutes";
-
+import { configRouter } from "./routes/configRoutes";
 
 export const createApp = (): Application => {
   const app = express();
@@ -21,14 +21,14 @@ export const createApp = (): Application => {
   // Routes
   app.use("/api", healthRouter);
   app.use("/api", scheduleRouter);
-
+  app.use("/api", configRouter);
 
   // 404 handler for unknown routes
   app.use((req: Request, res: Response) => {
     res.status(404).json({
       error: "Not Found",
       path: req.originalUrl,
-      requestId: req.requestId
+      requestId: req.requestId,
     });
   });
 
