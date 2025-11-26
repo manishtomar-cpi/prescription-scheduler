@@ -1,7 +1,9 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { requestId } from "./middleware/requestId";
 import { requestLogger } from "./middleware/requestLogger";
+import { healthRouter } from "./routes/healthRoutes";
+import { errorHandler } from "./middleware/errorHandler";
 
 export const createApp = (): Application => {
   const app = express();
@@ -14,7 +16,20 @@ export const createApp = (): Application => {
   app.use(requestId);
   app.use(requestLogger);
 
-  // Routes will be added here
+  // Routes
+  app.use("/api", healthRouter);
+
+  // 404 handler for unknown routes
+  app.use((req: Request, res: Response) => {
+    res.status(404).json({
+      error: "Not Found",
+      path: req.originalUrl,
+      requestId: req.requestId
+    });
+  });
+
+  // Global error handler
+  app.use(errorHandler);
 
   return app;
 };
