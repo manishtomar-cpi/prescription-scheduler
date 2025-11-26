@@ -1,6 +1,7 @@
 import { ScheduleRequest, DaySchedule } from "../domain/models";
 import { buildBaseDoses, PrescriptionConfig } from "../domain/prescriptionLogic";
 import { getNextNDays, toIsoDate } from "../utils/dateUtils";
+import { isBankHoliday } from "../utils/bankHolidayUtils";
 
 const TOTAL_DAYS = 14;
 
@@ -29,6 +30,24 @@ export const computeSchedule = (
     dose: baseDoses[index]
   }));
 
-  // availability and bank holidays will be applied here 
+  // Apply availability + bank holiday rules:
+  // If user is not available or it's a bank holiday:
+  //  - Add that day's dose to the previous day (if exists)
+  //  - Set current day dose to 0
+  for (let i = 0; i < schedule.length; i++) {
+    const current = schedule[i];
+    const dateObj = days[i].date;
+
+    const isAvailableDay = request.availableDays.includes(current.day);
+    const isHoliday = isBankHoliday(dateObj);
+
+    if (!isAvailableDay || isHoliday) {
+      if (i > 0) {
+        schedule[i - 1].dose += current.dose;
+      }
+      current.dose = 0;
+    }
+  }
+
   return schedule;
 };
