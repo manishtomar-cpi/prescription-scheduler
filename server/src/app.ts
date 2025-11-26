@@ -1,12 +1,18 @@
 import express, { Application } from "express";
 import cors from "cors";
+import { requestId } from "./middleware/requestId";
+import { requestLogger } from "./middleware/requestLogger";
 
 export const createApp = (): Application => {
   const app = express();
 
-  // core middleware
+  // Core middleware
   app.use(cors());
   app.use(express.json());
+
+  // Observability middleware
+  app.use(requestId);
+  app.use(requestLogger);
 
   // Routes will be added here
 
