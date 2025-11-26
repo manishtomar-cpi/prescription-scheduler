@@ -7,10 +7,16 @@ import { useSchedule } from "./hooks/useSchedule";
 import { ScheduleTable } from "./components/schedule/ScheduleTable";
 import { Loader } from "./components/ui/Loader";
 import { ErrorBanner } from "./components/ui/ErrorBanner";
+import { Toast } from "./components/ui/Toast";
+import {
+  createSuccessToast,
+  createErrorToast
+} from "./utils/toastHelpers";
 import type {
   ConfigResponse,
   ScheduleRequestPayload
 } from "./types/schedule";
+import type { ToastState } from "./utils/toastHelpers";
 
 type LoadStatus = "idle" | "loading" | "ok" | "error";
 
@@ -33,6 +39,8 @@ function App() {
   const [lastPayload, setLastPayload] = useState<ScheduleRequestPayload | null>(
     null
   );
+
+  const [toast, setToast] = useState<ToastState | null>(null);
 
   useEffect(() => {
     const checkHealth = async () => {
@@ -92,7 +100,21 @@ function App() {
 
   const handleFormSubmit = async (payload: ScheduleRequestPayload) => {
     setLastPayload(payload);
-    await requestSchedule(payload);
+    const ok = await requestSchedule(payload);
+
+    if (ok) {
+      setToast(
+        createSuccessToast(
+          "Schedule generated successfully for the next 14 days."
+        )
+      );
+    } else {
+      setToast(
+        createErrorToast(
+          "Failed to generate schedule. Please check the input and try again."
+        )
+      );
+    }
   };
 
   return (
@@ -203,7 +225,7 @@ function App() {
           <ScheduleTable schedule={schedule} />
         )}
 
-        {/* Debug payload card (can be removed before final submission if you want) */}
+        {/* Debug payload card (optional – can be removed before final submission) */}
         {lastPayload && (
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
             <div className="font-semibold text-slate-100 mb-2">
@@ -215,6 +237,15 @@ function App() {
           </div>
         )}
       </div>
+
+      {/* Toast notifications */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          variant={toast.variant}
+          onClose={() => setToast(null)}
+        />
+      )}
     </PageContainer>
   );
 }
