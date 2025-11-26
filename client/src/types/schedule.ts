@@ -13,6 +13,7 @@ export interface DaySchedule {
   date: string; // ISO date, e.g. "2025-02-10"
   day: string;  // "Mon", "Tue", etc.
   dose: number;
+   isBankHoliday: boolean;
 }
 
 export interface ConfigResponse {

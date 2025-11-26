@@ -1,7 +1,4 @@
-export type PrescriptionType =
-  | "stabilisation"
-  | "increasing"
-  | "reducing";
+export type PrescriptionType = "stabilisation" | "increasing" | "reducing";
 
 export interface ScheduleRequest {
   availableDays: string[]; // ["Mon", "Tue", ...]
@@ -17,7 +14,8 @@ export interface ScheduleRequest {
 }
 
 export interface DaySchedule {
-  date: string;      // ISO date
-  day: string;       // Mon, Tue, etc.
-  dose: number;      // ml
+  date: string; // ISO date
+  day: string; // Mon, Tue, etc.
+  dose: number; // ml
+  isBankHoliday: boolean;
 }

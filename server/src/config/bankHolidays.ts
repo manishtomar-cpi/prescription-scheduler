@@ -7,5 +7,6 @@ export const UK_BANK_HOLIDAYS: string[] = [
   "2025-05-26", // Spring bank holiday
   "2025-08-25", // Summer bank holiday
   "2025-12-25", // Christmas Day
-  "2025-12-26"  // Boxing Day
+  "2025-12-26" // Boxing Day
+
 ];

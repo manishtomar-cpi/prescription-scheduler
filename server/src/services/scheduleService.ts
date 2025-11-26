@@ -1,5 +1,3 @@
-// server/src/services/scheduleService.ts
-
 import { ScheduleRequest, DaySchedule } from "../domain/models";
 import {
   getBaseDoseForDayIndex,
@@ -25,8 +23,8 @@ const mapRequestToConfig = (req: ScheduleRequest): PrescriptionConfig => ({
 
 /**
  * Computes the full 14-day dosing schedule using a single-pass algorithm.
- * 
- * Algorithm Summary (O(n)):
+ *
+ * Algorithm (O(n)):
  *  - For each day:
  *      1. Compute the base dose for that day (stabilisation/increasing/reducing)
  *      2. Determine if the user can pick up medication on that day
@@ -71,6 +69,7 @@ export const computeSchedule = (
         date: toIsoDate(dayInfo.date),
         day: dayInfo.dayName,
         dose: clampDose(baseDose),
+         isBankHoliday: false,
       };
 
       lastPickupIndex = i;
@@ -91,6 +90,7 @@ export const computeSchedule = (
         date: toIsoDate(dayInfo.date),
         day: dayInfo.dayName,
         dose: 0,
+         isBankHoliday: isBankHoliday(dayInfo.date)
       };
     }
   }
