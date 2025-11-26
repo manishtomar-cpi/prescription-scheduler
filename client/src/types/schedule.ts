@@ -24,3 +24,9 @@ export interface ConfigResponse {
   };
   bankHolidays: string[];
 }
+
+export interface ScheduleResponse {
+  schedule: DaySchedule[];
+  requestId: string;
+}
+

@@ -7,6 +7,7 @@ import type {
   ScheduleRequestPayload
 } from "./types/schedule";
 import { PrescriptionForm } from "./components/form/PrescriptionForm";
+import { useSchedule } from "./hooks/useSchedule";
 
 type LoadStatus = "idle" | "loading" | "ok" | "error";
 
@@ -17,6 +18,14 @@ function App() {
   const [configStatus, setConfigStatus] = useState<LoadStatus>("idle");
   const [config, setConfig] = useState<ConfigResponse | null>(null);
   const [configError, setConfigError] = useState<string>("");
+
+  const {
+    schedule,
+    status: scheduleStatus,
+    error: scheduleError,
+    requestId,
+    requestSchedule
+  } = useSchedule();
 
   const [lastPayload, setLastPayload] = useState<ScheduleRequestPayload | null>(
     null
@@ -78,9 +87,9 @@ function App() {
     </span>
   );
 
-  const handleFormSubmit = (payload: ScheduleRequestPayload) => {
+  const handleFormSubmit = async (payload: ScheduleRequestPayload) => {
     setLastPayload(payload);
-    // In Phase 6, we will call the schedule API from here.
+    await requestSchedule(payload);
   };
 
   return (
@@ -144,6 +153,31 @@ function App() {
               Prescription types: {config.prescriptionTypes.join(", ")}
             </p>
           )}
+
+          {scheduleStatus !== "idle" && (
+            <p className="mt-4 text-xs text-slate-400">
+              Schedule status:{" "}
+              <span
+                className={
+                  scheduleStatus === "success"
+                    ? "text-emerald-400"
+                    : scheduleStatus === "error"
+                    ? "text-rose-400"
+                    : "text-slate-400"
+                }
+              >
+                {scheduleStatus}
+              </span>
+              {requestId && (
+                <span className="ml-2 text-slate-500">
+                  (requestId: {requestId})
+                </span>
+              )}
+            </p>
+          )}
+          {scheduleError && (
+            <p className="mt-1 text-xs text-rose-400">{scheduleError}</p>
+          )}
         </div>
 
         {configStatus === "ok" && config && (
@@ -157,6 +191,17 @@ function App() {
             </div>
             <pre className="whitespace-pre-wrap break-words">
               {JSON.stringify(lastPayload, null, 2)}
+            </pre>
+          </div>
+        )}
+
+        {schedule && (
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
+            <div className="font-semibold text-slate-100 mb-2">
+              Raw schedule (temporary debug – will be replaced with table)
+            </div>
+            <pre className="whitespace-pre-wrap break-words">
+              {JSON.stringify(schedule, null, 2)}
             </pre>
           </div>
         )}
