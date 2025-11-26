@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { PageContainer } from "./components/layout/PageContainer";
 import { fetchHealth } from "./api/healthApi";
 import { fetchConfig } from "./api/configApi";
+import { PrescriptionForm } from "./components/form/PrescriptionForm";
+import { useSchedule } from "./hooks/useSchedule";
+import { ScheduleTable } from "./components/schedule/ScheduleTable";
+import { Loader } from "./components/ui/Loader";
+import { ErrorBanner } from "./components/ui/ErrorBanner";
 import type {
   ConfigResponse,
   ScheduleRequestPayload
 } from "./types/schedule";
-import { PrescriptionForm } from "./components/form/PrescriptionForm";
-import { useSchedule } from "./hooks/useSchedule";
 
 type LoadStatus = "idle" | "loading" | "ok" | "error";
 
@@ -95,6 +98,7 @@ function App() {
   return (
     <PageContainer title="Prescription Scheduler" footer={footerNode}>
       <div className="space-y-4">
+        {/* System status card */}
         <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6">
           <h2 className="text-lg font-semibold mb-2 text-slate-100">
             System status
@@ -176,14 +180,30 @@ function App() {
             </p>
           )}
           {scheduleError && (
-            <p className="mt-1 text-xs text-rose-400">{scheduleError}</p>
+            <div className="mt-2">
+              <ErrorBanner message={scheduleError} />
+            </div>
           )}
         </div>
 
+        {/* Stage 1 form */}
         {configStatus === "ok" && config && (
           <PrescriptionForm config={config} onSubmit={handleFormSubmit} />
         )}
 
+        {/* Loading state for schedule */}
+        {scheduleStatus === "loading" && (
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+            <Loader />
+          </div>
+        )}
+
+        {/* 14-day schedule table */}
+        {schedule && scheduleStatus === "success" && (
+          <ScheduleTable schedule={schedule} />
+        )}
+
+        {/* Debug payload card (can be removed before final submission if you want) */}
         {lastPayload && (
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
             <div className="font-semibold text-slate-100 mb-2">
@@ -191,17 +211,6 @@ function App() {
             </div>
             <pre className="whitespace-pre-wrap break-words">
               {JSON.stringify(lastPayload, null, 2)}
-            </pre>
-          </div>
-        )}
-
-        {schedule && (
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
-            <div className="font-semibold text-slate-100 mb-2">
-              Raw schedule (temporary debug – will be replaced with table)
-            </div>
-            <pre className="whitespace-pre-wrap break-words">
-              {JSON.stringify(schedule, null, 2)}
             </pre>
           </div>
         )}
