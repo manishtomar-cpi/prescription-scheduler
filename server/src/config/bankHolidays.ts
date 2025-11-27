@@ -1,4 +1,3 @@
-// Example UK bank holidays (can be extended as needed)
 export const UK_BANK_HOLIDAYS: string[] = [
   "2025-01-01", // New Year's Day
   "2025-04-18", // Good Friday

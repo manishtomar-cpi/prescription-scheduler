@@ -224,8 +224,7 @@ function App() {
         {schedule && scheduleStatus === "success" && (
           <ScheduleTable schedule={schedule} />
         )}
-
-        {/* Debug payload card (optional – can be removed before final submission) */}
+        
         {/* {lastPayload && (
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300">
             <div className="font-semibold text-slate-100 mb-2">
